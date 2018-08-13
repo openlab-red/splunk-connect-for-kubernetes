@@ -1,4 +1,4 @@
-# Splunk Connect For OpenShift
+# Splunk Connect for OpenShift
 
   
 This README explains how to integrate Splunk in OpenShift using the new [Splunk Connect for Kubernetes](https://github.com/splunk/splunk-connect-for-kubernetes).
