@@ -1,0 +1,46 @@
+global:
+  logLevel: info
+  splunk:
+    hec:
+      host: xxxxxxxxxxx
+      port: xxxxx
+      token: xxxxxx-xxxx-xxxx-xxx-xxxxxxxxx
+      protocol: https
+      insecureSSL: true
+
+logLevel: info
+
+rbac:
+  create: true
+
+
+serviceAccount:
+  create: true
+  name:
+
+image:
+  heapsterTag: v1.5.1
+  sidecarTag: 1.0.1
+  pullPolicy: IfNotPresent
+
+resources:
+  heapster:
+    limits:
+      cpu: 100m
+      memory: 300Mi
+    requests:
+      cpu: 100m
+      memory: 300Mi
+  sidecar:
+    limits:
+      cpu: 100m
+      memory: 300Mi
+    requests:
+      cpu: 100m
+      memory: 300Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

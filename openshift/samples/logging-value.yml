@@ -1,0 +1,113 @@
+global:
+  logLevel: info
+  splunk:
+    hec:
+      host: xxxxxxxxxxx
+      port: xxxxx
+      token: xxxxxx-xxxx-xxxx-xxx-xxxxxxxxx
+      protocol: https
+      insecureSSL: true
+
+logLevel: info
+
+journalLogPath: /run/log/journal
+
+logs:
+  docker:
+    from:
+      journald:
+        unit: docker.service
+    timestampExtraction:
+      regexp: time="(?<time>\d{4}-\d{2}-\d{2}T[0-2]\d:[0-5]\d:[0-5]\d.\d{9}Z)"
+      format: "%Y-%m-%dT%H:%M:%S.%NZ"
+    sourcetype: kube:docker
+  kubelet: &glog
+    from:
+      journald:
+        unit: kubelet.service
+    timestampExtraction:
+      regexp: \w(?<time>[0-1]\d[0-3]\d [^\s]*)
+      format: "%m%d %H:%M:%S.%N"
+    multiline:
+      firstline: /^\w[0-1]\d[0-3]\d/
+    sourcetype: kube:kubelet
+  etcd:
+    from:
+      pod: etcd-server
+      container: etcd-container
+    timestampExtraction:
+      regexp: (?<time>\d{4}-\d{2}-\d{2} [0-2]\d:[0-5]\d:[0-5]\d\.\d{6})
+      format: "%Y-%m-%d %H:%M:%S.%N"
+    sourcetype: kube:etcd
+  etcd-events:
+    from:
+      pod: etcd-server-events
+      container: etcd-container
+    timestampExtraction:
+      regexp: (?<time>\d{4}-[0-1]\d-[0-3]\d [0-2]\d:[0-5]\d:[0-5]\d\.\d{6})
+      format: "%Y-%m-%d %H:%M:%S.%N"
+    sourcetype: kube:etcd-events
+  kube-apiserver:
+    <<: *glog
+    from:
+      pod: kube-apiserver
+    sourcetype: kube:kube-apiserver
+  kube-scheduler:
+    <<: *glog
+    from:
+      pod: kube-scheduler
+    sourcetype: kube:kube-scheduler
+  kube-controller-manager:
+    <<: *glog
+    from:
+      pod: kube-controller-manager
+    sourcetype: kube:kube-controller-manager
+  kube-proxy:
+    <<: *glog
+    from:
+      pod: kube-proxy
+    sourcetype: kube:kube-proxy
+  kubedns:
+    <<: *glog
+    from:
+      pod: kube-dns
+    sourcetype: kube:kubedns
+  dnsmasq:
+    <<: *glog
+    from:
+      pod: kube-dns
+    sourcetype: kube:dnsmasq
+  dns-sidecar:
+    <<: *glog
+    from:
+      pod: kube-dns
+      container: sidecar
+    sourcetype: kube:kubedns-sidecar
+  dns-controller:
+    <<: *glog
+    from:
+      pod: dns-controller
+    sourcetype: kube:dns-controller
+  kube-dns-autoscaler:
+    <<: *glog
+    from:
+      pod: kube-dns-autoscaler
+      container: autoscaler
+    sourcetype: kube:kube-dns-autoscaler
+
+
+image:
+  tag: 1.0.1
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+   cpu: 100m
+   memory: 200Mi
+
+tolerations: []
+
+nodeSelector:
+  logging-infra-fluentd: "true"
+
+affinity: {}

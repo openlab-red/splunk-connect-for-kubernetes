@@ -1,0 +1,59 @@
+global:
+  logLevel: info
+  splunk:
+    hec:
+      host: xxxxxxxxxxx
+      port: xxxxx
+      token: xxxxxx-xxxx-xxxx-xxx-xxxxxxxxx
+      protocol: https
+      insecureSSL: true
+
+logLevel: info
+
+rbac:
+  create: true
+
+
+serviceAccount:
+  create: true
+  name:
+
+kubernetes:
+  url:
+  insecureSSL: true
+  clientCert:
+  clientKey:
+  caFile: 
+  bearerTokenFile:
+  secretDir:
+ 
+objects:
+  core:
+    v1:
+      - name: pods
+      - name: namespaces
+      - name: nodes
+      - name: events
+        mode: watch
+
+checkpointFile:
+  name: kubernetes-objects.pos
+  volume:
+
+image:
+  tag: 1.0.1
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+   cpu: 100m
+   memory: 200Mi
+
+
+nodeSelector: {}
+
+
+tolerations: []
+
+
+affinity: {}
