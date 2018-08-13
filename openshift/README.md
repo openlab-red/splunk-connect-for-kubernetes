@@ -17,7 +17,7 @@ tar xvfz helm-v2.9.1-linux-amd64.tar.gz
 cp linux-amd64/helm /usr/local/bin/
 chmod +x /usr/local/bin/helm
 ```
-
+  
 #### Configure Tiller
 
 1.  Create Service Account for tiller
@@ -46,6 +46,8 @@ chmod +x /usr/local/bin/helm
     ```
     oc create -f tiller-clusterrolebinding
     ```
+
+> Note about [HELM Security](https://engineering.bitnami.com/articles/helm-security.html)
 
 ## Splunk Connect for Kubernetes
 
