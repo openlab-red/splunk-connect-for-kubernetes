@@ -91,6 +91,8 @@ chmod +x /usr/local/bin/helm
     
     ```
     helm install --name splunk-kubernetes-metrics -f metrics-value.yml splunk-kubernetes-metrics-1.0.1.tgz
+    oc patch deployment splunk-kubernetes-metrics -p '{"spec":{"template":{ "spec":{"containers":[{"name": "splunk-heapster","command": ["/heapster","--source=kubernetes:?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250","--sink=statsd:udp://127.0.0.1:9001"]}]}}}}'
+    oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-metrics
     ```
     
 4.  splunk-kubernetes-metrics
