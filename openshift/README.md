@@ -89,7 +89,7 @@ chmod +x /usr/local/bin/helm
         oc delete pod --all
         ```
     
-3.  splunk-kubernetes-metrics
+2.  splunk-kubernetes-metrics
     
     ```
     helm install --name splunk-kubernetes-metrics -f metrics-value.yml splunk-kubernetes-metrics-1.0.1.tgz
@@ -97,7 +97,7 @@ chmod +x /usr/local/bin/helm
     oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-metrics
     ```
     
-4.  splunk-kubernetes-metrics
+3.  splunk-kubernetes-objects
     
     ```
     helm install --name splunk-kubernetes-objects -f objects-value.yml splunk-kubernetes-objects-1.0.1.tgz
