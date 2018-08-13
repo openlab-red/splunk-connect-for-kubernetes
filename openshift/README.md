@@ -26,7 +26,7 @@ chmod +x /usr/local/bin/helm
         oc create sa tiller
     ```
     
-2.  Assign Cluster admin role
+2.  Assign Cluster admin role: tiller-clusterrolebinding.yml
     
     ```yml
     kind: ClusterRoleBinding
@@ -44,7 +44,7 @@ chmod +x /usr/local/bin/helm
     ```
     
     ```
-    oc create -f tiller-clusterrolebinding
+    oc create -f tiller-clusterrolebinding.yml
     ```
 
 > Note about [HELM Security](https://engineering.bitnami.com/articles/helm-security.html)
