@@ -20,31 +20,19 @@ chmod +x /usr/local/bin/helm
   
 #### Configure Tiller
 
-1.  Create Service Account for tiller
+1.  Create Project
     ```
-        oc project kube-system
-        oc create sa tiller
-    ```
-    
-2.  Assign Cluster admin role: tiller-clusterrolebinding.yml
-    
-    ```yml
-    kind: ClusterRoleBinding
-    apiVersion: rbac.authorization.k8s.io/v1beta1
-    metadata:
-      name: tiller-clusterrolebinding
-    subjects:
-    - kind: ServiceAccount
-      name: tiller
-      namespace: kube-system
-    roleRef:
-      kind: ClusterRole
-      name: cluster-admin
-      apiGroup: ""
+        oc new-project splunk-connect
+        oc annotate namespace splunk-connect openshift.io/node-selector=""
+        oc adm policy add-scc-to-user privileged  -z default
     ```
     
+2.  Create Service Account tiller and relative role
+    
     ```
-    oc create -f tiller-clusterrolebinding.yml
+    oc create sa tiller
+    oc adm policy add-role-to-user admin -z tiller
+    oc adm policy add-cluster-role-to-user cluster-admin -z tiller
     ```
 
 3. Note about Helm Security:
@@ -74,11 +62,8 @@ chmod +x /usr/local/bin/helm
     ```
     helm init \
     --override 'spec.template.spec.containers[0].command'='{/tiller,--storage=secret,--listen=localhost:44134}' \
-    --service-account=tiller
-    
-    oc new-project splunk-connect
-    oc annotate namespace splunk-connect openshift.io/node-selector=""
-    oc adm policy add-scc-to-user privileged  -z default
+    --service-account=tiller \
+    --tiller-namespace=splunk-connect
     ```
 
 ### Installation
@@ -86,7 +71,7 @@ chmod +x /usr/local/bin/helm
 1.  splunk-kubernetes-logging
     
     ```
-    helm install --name splunk-kubernetes-logging -f logging-value.yml splunk-kubernetes-logging-1.0.1.tgz
+    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-logging -f logging-value.yml splunk-kubernetes-logging-1.0.1.tgz
     ```
     
     * The following patch adds privileged=true securityContext and provider=openshift label.
@@ -140,7 +125,7 @@ chmod +x /usr/local/bin/helm
 2.  splunk-kubernetes-metrics
     
     ```
-    helm install --name splunk-kubernetes-metrics -f metrics-value.yml splunk-kubernetes-metrics-1.0.1.tgz
+    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-metrics -f metrics-value.yml splunk-kubernetes-metrics-1.0.1.tgz
     oc patch deployment splunk-kubernetes-metrics -p '{
        "spec":{
           "template":{
@@ -165,7 +150,7 @@ chmod +x /usr/local/bin/helm
 3.  splunk-kubernetes-objects
     
     ```
-    helm install --name splunk-kubernetes-objects -f objects-value.yml splunk-kubernetes-objects-1.0.1.tgz
+    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-objects -f objects-value.yml splunk-kubernetes-objects-1.0.1.tgz
     ```
     
 
