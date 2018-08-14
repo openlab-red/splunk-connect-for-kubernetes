@@ -48,8 +48,8 @@ chmod +x /usr/local/bin/helm
     ```
 
 3. Note about Helm Security:
-  * [HELM Security](https://engineering.bitnami.com/articles/helm-security.html)
-  * [Securing HELM installation](https://docs.helm.sh/using_helm/#securing-your-helm-installation)
+    * [HELM Security](https://engineering.bitnami.com/articles/helm-security.html)
+    * [Securing HELM installation](https://docs.helm.sh/using_helm/#securing-your-helm-installation)
 
 ## Splunk Connect for Kubernetes
 
