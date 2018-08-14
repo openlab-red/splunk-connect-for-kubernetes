@@ -22,7 +22,7 @@ chmod +x /usr/local/bin/helm
 
 1.  Create Project
     ```
-        oc new-project splunk-connect --node-selector=""
+        oc adm new-project splunk-connect --node-selector=""
         oc adm policy add-scc-to-user privileged  -z default
     ```
     
