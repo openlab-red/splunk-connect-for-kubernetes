@@ -22,8 +22,7 @@ chmod +x /usr/local/bin/helm
 
 1.  Create Project
     ```
-        oc new-project splunk-connect
-        oc annotate namespace splunk-connect openshift.io/node-selector=""
+        oc new-project splunk-connect --node-selector=""
         oc adm policy add-scc-to-user privileged  -z default
     ```
     
@@ -76,50 +75,27 @@ chmod +x /usr/local/bin/helm
     
     * The following patch adds privileged=true securityContext and provider=openshift label.
         ```
-          oc patch ds splunk-kubernetes-logging -p '{"metadata": {
-              "labels": {
-                  "app": "splunk-kubernetes-logging",
-                  "chart": "splunk-kubernetes-logging-1.0.1",
-                  "engine": "fluentd",
-                  "heritage": "Tiller",
-                  "provider": "openshift",
-                  "release": "splunk-kubernetes-logging"
-              }
-          },
-          "spec": {
-              "selector": {
-                  "matchLabels": {
-                      "app": "splunk-kubernetes-logging",
-                      "provider": "openshift",
-                      "release": "splunk-kubernetes-logging"
-                  }
-              },
-              "template": {
-                  "metadata": {
-                      "labels": {
-                          "app": "splunk-kubernetes-logging",
-                          "provider": "openshift",
-                          "release": "splunk-kubernetes-logging"
-                      }
-                  },
-                  "spec": {
-                      "containers": [
-                          {
-                              "name": "splunk-fluentd-k8s-logs",
-                              "securityContext": {
-                                  "privileged": true
-                              }
-                          }
+          oc patch ds splunk-kubernetes-logging -p '{
+             "spec":{
+                "template":{
+                   "spec":{
+                      "containers":[
+                         {
+                            "name":"splunk-fluentd-k8s-logs",
+                            "securityContext":{
+                               "privileged":true
+                            }
+                         }
                       ]
-                  }
-              }
-          }
-      }'
+                   }
+                }
+             }
+          }'
         ```
     * delete the pods to apply the latest patch
     
         ```
-        oc delete pod --all
+        oc delete pods -lapp=splunk-kubernetes-logging
         ```
     
 2.  splunk-kubernetes-metrics
