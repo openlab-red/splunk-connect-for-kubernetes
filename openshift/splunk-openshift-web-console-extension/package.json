@@ -1,0 +1,25 @@
+{
+  "name": "splunk-openshift-web-console-extension",
+  "version": "1.0.0",
+  "description": "Splunk OpenShift Web Console Extension",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": {
+    "name": "Mattia Mascia",
+    "email": "mmascia@redhat.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/openlab-red/splunk-connect-for-kubernetes.git"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "dependencies": {
+    "express": "^4.14.1",
+    "http": "0.0.0",
+    "path": "^0.12.7"
+  },
+  "license": "MIT"
+}
