@@ -47,7 +47,9 @@ chmod +x /usr/local/bin/helm
     oc create -f tiller-clusterrolebinding.yml
     ```
 
-> Note about [HELM Security](https://engineering.bitnami.com/articles/helm-security.html)
+3. Note about Helm Security:
+  * [HELM Security](https://engineering.bitnami.com/articles/helm-security.html)
+  * [Securing HELM installation](https://docs.helm.sh/using_helm/#securing-your-helm-installation)
 
 ## Splunk Connect for Kubernetes
 
@@ -70,7 +72,10 @@ chmod +x /usr/local/bin/helm
 3.  Project setup
     
     ```
-    helm init --service-account tiller
+    helm init \
+    --override 'spec.template.spec.containers[0].command'='{/tiller,--storage=secret,--listen=localhost:44134}' \
+    --service-account=tiller
+    
     oc new-project splunk-connect
     oc adm policy add-scc-to-user privileged  -z default
     ```
