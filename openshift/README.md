@@ -77,6 +77,7 @@ chmod +x /usr/local/bin/helm
     --service-account=tiller
     
     oc new-project splunk-connect
+    oc annotate namespace splunk-connect openshift.io/node-selector=""
     oc adm policy add-scc-to-user privileged  -z default
     ```
 
@@ -86,8 +87,50 @@ chmod +x /usr/local/bin/helm
     
     ```
     helm install --name splunk-kubernetes-logging -f logging-value.yml splunk-kubernetes-logging-1.0.1.tgz
-    oc patch ds splunk-kubernetes-logging -p '{"spec":{"template":{"spec":{"containers":[{"name":"splunk-fluentd-k8s-logs","securityContext":{"privileged": true}}]}}}}'
     ```
+    
+    * The following patch adds privileged=true securityContext and provider=openshift label.
+        ```
+          oc patch ds splunk-kubernetes-logging -p '{"metadata": {
+              "labels": {
+                  "app": "splunk-kubernetes-logging",
+                  "chart": "splunk-kubernetes-logging-1.0.1",
+                  "engine": "fluentd",
+                  "heritage": "Tiller",
+                  "provider": "openshift",
+                  "release": "splunk-kubernetes-logging"
+              }
+          },
+          "spec": {
+              "selector": {
+                  "matchLabels": {
+                      "app": "splunk-kubernetes-logging",
+                      "provider": "openshift",
+                      "release": "splunk-kubernetes-logging"
+                  }
+              },
+              "template": {
+                  "metadata": {
+                      "labels": {
+                          "app": "splunk-kubernetes-logging",
+                          "provider": "openshift",
+                          "release": "splunk-kubernetes-logging"
+                      }
+                  },
+                  "spec": {
+                      "containers": [
+                          {
+                              "name": "splunk-fluentd-k8s-logs",
+                              "securityContext": {
+                                  "privileged": true
+                              }
+                          }
+                      ]
+                  }
+              }
+          }
+      }'
+        ```
     * delete the pods to apply the latest patch
     
         ```
@@ -98,7 +141,24 @@ chmod +x /usr/local/bin/helm
     
     ```
     helm install --name splunk-kubernetes-metrics -f metrics-value.yml splunk-kubernetes-metrics-1.0.1.tgz
-    oc patch deployment splunk-kubernetes-metrics -p '{"spec":{"template":{ "spec":{"containers":[{"name": "splunk-heapster","command": ["/heapster","--source=kubernetes:?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250","--sink=statsd:udp://127.0.0.1:9001"]}]}}}}'
+    oc patch deployment splunk-kubernetes-metrics -p '{
+       "spec":{
+          "template":{
+             "spec":{
+                "containers":[
+                   {
+                      "name":"splunk-heapster",
+                      "command":[
+                         "/heapster",
+                         "--source=kubernetes:?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250",
+                         "--sink=statsd:udp://127.0.0.1:9001"
+                      ]
+                   }
+                ]
+             }
+          }
+       }
+    }'
     oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-metrics
     ```
     
