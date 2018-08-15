@@ -18,7 +18,7 @@
 
         return {
             type: 'dom',
-            template: '<span><a href="' + splunk.url + '">' + resource.metadata.name + '</a><span class="action-divider">|</span></span>'
+            node: '<span><a href="' + splunk.url + '">' + resource.metadata.name + '</a><span class="action-divider">|</span></span>'
         };
     }
 
