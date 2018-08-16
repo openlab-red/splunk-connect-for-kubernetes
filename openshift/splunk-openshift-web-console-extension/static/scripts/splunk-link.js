@@ -3,7 +3,7 @@
 
     var splunk = {
         url: window.OPENSHIFT_EXTENSION_PROPERTIES.splunkURL,
-        prefix: window.OPENSHIFT_EXTENSION_PROPERTIES.splunkQueryPrefix,
+        prefix: window.OPENSHIFT_EXTENSION_PROPERTIES.splunkQueryPrefix
     };
     var href = splunk.url + splunk.prefix;
 
@@ -27,7 +27,7 @@
 
         return {
             type: 'dom',
-            node: '<span class="splunk-logo"><a href="' + href + '"> Splunk </a><span class="action-divider">|</span></span>'
+            node: '<span class="splunk-logo"><a href="' + href + '"><img src="https://www.splunk.com/content/dam/splunk2/images/logos/splunk-logo.svg" alt="Splunk"/></a><span class="action-divider">|</span></span>'
         };
     }
 

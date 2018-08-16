@@ -1,3 +1,13 @@
 .splunk-logo {
+    background-color: rgba(0, 0, 0, 1);
+    padding: 2px;
+}
 
+.splunk-logo img {
+    height: 31px;
+    vertical-align: middle;
+}
+
+.splunk-logo a {
+    text-decoration: none;
 }

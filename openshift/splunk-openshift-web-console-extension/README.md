@@ -3,14 +3,36 @@
 
 ## OpenShift Deployment
 
-```
-oc project splunk-connect
+1. Deploy Splunk link.
 
-oc new-app https://github.com/openlab-red/splunk-connect-for-kubernetes \
-    --context-dir=/openshift/splunk-openshift-web-console-extension
+    ```
+    oc project splunk-connect
 
-oc create route edge --service=splunk-connect-for-kubernetes
-```
+    oc new-app https://github.com/openlab-red/splunk-connect-for-kubernetes \
+        --context-dir=/openshift/splunk-openshift-web-console-extension
+
+    oc create route edge --service=splunk-connect-for-kubernetes
+    ```
+
+2. Update openshift web console configmap
+
+    ```
+        oc project openshift-web-console
+        oc edit cm webconsole-config
+    ```
+
+    Add the following configuration:
+
+    ```yml
+    extensions:
+      properties:
+        splunkURL: "<splunk url>"
+        splunkQueryPrefix: "/app/search/search?q=search%20index=<your-index>&display.page.search.mode=verbose&dispatch.sample_ratio=1&earliest=rt-1h&latest=rt"
+      scriptURLs:
+        - https://<your splunk link url>/scripts/splunk-link.js
+      stylesheetURLs:
+        - https:/<your splunk link url>/styles/splunk-link.css
+    ```
 
 
 ## Local Test
