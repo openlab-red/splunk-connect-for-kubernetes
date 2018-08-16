@@ -1,6 +1,11 @@
 (function () {
     'use strict';
 
+    var splunk = {
+        url: window.OPENSHIFT_EXTENSION_PROPERTIES.splunkURL,
+        prefix: window.OPENSHIFT_EXTENSION_PROPERTIES.splunkQueryPrefix,
+    };
+    var href = splunk.url + splunk.prefix;
 
     angular.module("extension.splunk", ['openshiftConsole'])
         .run(function (extensionRegistry) {
@@ -10,15 +15,19 @@
         });
 
     function splunkLink(resource, options) {
-        var splunk = {
-            url: window.OPENSHIFT_EXTENSION_PROPERTIES.splunkURL,
-            prefix: window.OPENSHIFT_EXTENSION_PROPERTIES.splunkQueryPrefix,
-            postfix: window.OPENSHIFT_EXTENSION_PROPERTIES.splunkQueryPostfix
-        };
+
+        if (!options.container) { // 1 container
+            options.container = resource.spec.containers[0].name;
+        }
+
+        href += '&namespace=' + resource.metadata.namespace;
+        href += '&container_name=' + options.container;
+        //href += '&pod=' + resource.metadata.name;
+
 
         return {
             type: 'dom',
-            node: '<span><a href="' + splunk.url + '">' + resource.metadata.name + '</a><span class="action-divider">|</span></span>'
+            node: '<span class="splunk-logo"><a href="' + href + '"> Splunk </a><span class="action-divider">|</span></span>'
         };
     }
 
