@@ -35,8 +35,6 @@
     ```
 
 3. Outcome
-
-    ![Splunk Image](./static/images/example.png)
     ![Splunk Image](./static/images/example2.png)
 
 ## Local Test
