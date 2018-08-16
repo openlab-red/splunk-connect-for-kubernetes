@@ -27,7 +27,7 @@
 
         return {
             type: 'dom',
-            node: '<span><span class="splunk-logo"><a href="' + href + '"><img src="https://www.splunk.com/content/dam/splunk2/images/logos/splunk-logo.svg" alt="Splunk"/></a></span><span class="action-divider">|</span></span>'
+            node: '<span><span class="splunk-logo"><a href="' + href + '" target="_blank"><img src="https://www.splunk.com/content/dam/splunk2/images/logos/splunk-logo.svg" alt="Splunk"/></a></span><span class="action-divider">|</span></span>'
         };
     }
 
