@@ -34,6 +34,9 @@
         - https:/<your splunk link url>/styles/splunk-link.css
     ```
 
+3. Outcome
+
+    ![Splunk Image](./static/images/example.png)
 
 ## Local Test
 
