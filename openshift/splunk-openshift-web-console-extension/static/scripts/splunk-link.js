@@ -1,36 +1,55 @@
 (function () {
     'use strict';
 
-    var splunk = {
-        url: window.OPENSHIFT_EXTENSION_PROPERTIES.splunkURL,
-        prefix: window.OPENSHIFT_EXTENSION_PROPERTIES.splunkQueryPrefix
-    };
-    var href = splunk.url + splunk.prefix;
-
     angular.module("extension.splunk", ['openshiftConsole'])
         .run(function (extensionRegistry) {
             extensionRegistry.add('log-links', _.spread(function (resource, options) {
-                return splunkLink(resource, options);
+                return {
+                    type: 'dom',
+                    node: '<splunk-link />'
+                };
             }));
-        });
+        })
+        .directive('splunkLink', SplunkLink);
 
-    function splunkLink(resource, options) {
 
-        if (!options.container) { // 1 container
-            options.container = resource.spec.containers[0].name;
+    function SplunkLink() {
+
+        var directive = {
+            restrict: 'E',
+            template: '<span>' +
+            '   <span class="splunk-logo">' +
+            '       <a href="{{ searchString }}" target="_blank">' +
+            '           <img src="https://www.splunk.com/content/dam/splunk2/images/logos/splunk-logo.svg" alt="Splunk"/>' +
+            '       </a>' +
+            '   </span>' +
+            '   <span class="action-divider">|</span>' +
+            '</span>',
+            scope: {},
+            link: link
+        };
+
+        return directive;
+
+        function link(scope, element, attributes) {
+            //... it should exist a better approach to watch the container list....
+            var _logViewerScope = scope.$parent.$parent.$parent;
+            _logViewerScope.$watchGroup(['context.project.metadata.name', 'options.container', 'name'], function () {
+                var namespace = _logViewerScope.context.projectName,
+                    container = _logViewerScope.options.container;
+                scope.searchString = searchString(scope, namespace, container);
+            });
         }
 
-        href += '&namespace=' + resource.metadata.namespace;
-        href += '&container_name=' + options.container;
-        //href += '&pod=' + resource.metadata.name;
+        function searchString(scope, namespace, container) {
+            var properties = window.OPENSHIFT_EXTENSION_PROPERTIES;
+            return properties.splunkURL +
+                properties.splunkQueryPrefix +
+                '&namespace=' + namespace +
+                '&container_name=' + container;
+        }
 
-
-        return {
-            type: 'dom',
-            node: '<span><span class="splunk-logo"><a href="' + href + '"><img src="https://www.splunk.com/content/dam/splunk2/images/logos/splunk-logo.svg" alt="Splunk"/></a></span><span class="action-divider">|</span></span>'
-        };
     }
-
 
     hawtioPluginLoader.addModule("extension.splunk");
 
