@@ -102,6 +102,10 @@ chmod +x /usr/local/bin/helm
     
     ```
     helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-metrics -f metrics-value.yml splunk-kubernetes-metrics-1.0.1.tgz
+    
+    oc delete clusterrolebinding splunk-kubernetes-metrics
+    oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-metrics --rolebinding-name=splunk-kubernetes-metrics
+    
     oc patch deployment splunk-kubernetes-metrics -p '{
        "spec":{
           "template":{
@@ -120,7 +124,6 @@ chmod +x /usr/local/bin/helm
           }
        }
     }'
-    oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-metrics
     ```
     
 3.  splunk-kubernetes-objects
