@@ -6,7 +6,8 @@
             extensionRegistry.add('log-links', _.spread(function (resource, options) {
                 return {
                     type: 'dom',
-                    node: '<splunk-link />'
+                    node: '<splunk-link pod="' + resource.metadata.name +
+                    '" namespace="' + resource.metadata.namespace + '" />'
                 };
             }));
         })
@@ -25,7 +26,10 @@
             '   </span>' +
             '   <span class="action-divider">|</span>' +
             '</span>',
-            scope: {},
+            scope: {
+                pod: '@',
+                namespace: '@'
+            },
             link: link
         };
 
@@ -35,18 +39,18 @@
             //... it should exist a better approach to watch the container list....
             var _logViewerScope = scope.$parent.$parent.$parent;
             _logViewerScope.$watchGroup(['context.project.metadata.name', 'options.container', 'name'], function () {
-                var namespace = _logViewerScope.context.projectName,
-                    container = _logViewerScope.options.container;
-                scope.searchString = searchString(scope, namespace, container);
+                var container = _logViewerScope.options.container;
+                scope.searchString = searchString(attributes, container);
             });
         }
 
-        function searchString(scope, namespace, container) {
+        function searchString(attr, container) {
             var properties = window.OPENSHIFT_EXTENSION_PROPERTIES;
             return properties.splunkURL +
                 properties.splunkQueryPrefix +
-                ' namespace=' + namespace +
-                ' container_name=' + container;
+                ' namespace=' + attr.namespace +
+                ' container_name=' + container +
+                ' pod=' + attr.pod;
         }
 
     }
