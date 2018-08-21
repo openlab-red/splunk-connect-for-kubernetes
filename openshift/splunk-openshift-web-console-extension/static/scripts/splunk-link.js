@@ -45,8 +45,8 @@
             var properties = window.OPENSHIFT_EXTENSION_PROPERTIES;
             return properties.splunkURL +
                 properties.splunkQueryPrefix +
-                '&namespace=' + namespace +
-                '&container_name=' + container;
+                ' namespace=' + namespace +
+                ' container_name=' + container;
         }
 
     }
