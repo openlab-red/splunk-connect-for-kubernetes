@@ -27,7 +27,7 @@
     extensions:
       properties:
         splunkURL: "<splunk url>"
-        splunkQueryPrefix: "/app/search/search?q=search%20index=<your-index>&display.page.search.mode=verbose&dispatch.sample_ratio=1&earliest=rt-1h&latest=rt"
+        splunkQueryPrefix: "/app/search/search?q=search%20index=<your-index>"
       scriptURLs:
         - https://<your splunk link url>/scripts/splunk-link.js
       stylesheetURLs:
