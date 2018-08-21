@@ -73,7 +73,7 @@ chmod +x /usr/local/bin/helm
     helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-logging -f logging-value.yml splunk-kubernetes-logging-1.0.1.tgz
     ```
     
-    * The following patch adds privileged=true securityContext and provider=openshift label.
+    * The following patch adds privileged=true securityContext.
         ```
           oc patch ds splunk-kubernetes-logging -p '{
              "spec":{
