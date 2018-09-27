@@ -42,3 +42,7 @@
 ```
     npm start
 ```
+
+## To extend existing openshift web console extension.
+
+[OpenShift Web Console Extension](https://github.com/openlab-red/ext-openshift-web-console)
