@@ -12,7 +12,7 @@ Follow the [Splunk Connect Prerequistes](https://github.com/splunk/splunk-connec
 
 ```
 cd /tmp
-wget https://storage.[googleapis.com](http://googleapis.com)/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz
+wget https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz
 tar xvfz helm-v2.9.1-linux-amd64.tar.gz
 cp linux-amd64/helm /usr/local/bin/
 chmod +x /usr/local/bin/helm
