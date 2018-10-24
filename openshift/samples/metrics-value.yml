@@ -2,8 +2,8 @@ global:
   logLevel: info
   splunk:
     hec:
-      host: xxxxxxxxxxx
-      port: xxxxx
+      host: splunk.openlab.red
+      port: 8080
       token: xxxxxx-xxxx-xxxx-xxx-xxxxxxxxx
       protocol: https
       insecureSSL: true
@@ -11,7 +11,7 @@ global:
 logLevel: info
 
 rbac:
-  create: true
+  create: false
 
 
 serviceAccount:
