@@ -128,6 +128,8 @@ chmod +x /usr/local/bin/helm
     
     ```
     helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-objects -f objects-value.yml splunk-kubernetes-objects-1.0.1.tgz
+    
+    oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-objects --rolebinding-name=splunk-kubernetes-objects
     ```
     
 
