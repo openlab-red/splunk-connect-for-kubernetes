@@ -105,7 +105,9 @@ resources:
    cpu: 100m
    memory: 200Mi
 
-tolerations: []
+tolerations:
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
 
 nodeSelector:
   logging-infra-fluentd: "true"
