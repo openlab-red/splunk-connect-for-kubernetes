@@ -109,7 +109,6 @@ tolerations:
   - key: node-role.kubernetes.io/master
     effect: NoSchedule
 
-nodeSelector:
-  logging-infra-fluentd: "true"
+nodeSelector: {}
 
 affinity: {}
