@@ -133,4 +133,14 @@ chmod +x /usr/local/bin/helm
     ```
     
 
-### Enjoy :)
+# Splunk OpenShift Web Console Extension
+
+## Follow
+
+[OpenShift Web Console Extension](https://github.com/openlab-red/ext-openshift-web-console)
+
+## Outcome
+
+![Splunk Image](images/example2.png)
+
+# Enjoy :)
