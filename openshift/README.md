@@ -60,9 +60,9 @@ chmod +x /usr/local/bin/helm
     
     ```
     cd /tmp
-    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.1.0/splunk-kubernetes-logging-1.1.0.tgz
-    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.1.0/splunk-kubernetes-metrics-1.1.0.tgz
-    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.1.0/splunk-kubernetes-objects-1.1.0.tgz
+    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/1.1.0/splunk-kubernetes-logging-1.1.0.tgz
+    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/1.1.0/splunk-kubernetes-metrics-1.1.0.tgz
+    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/1.1.0/splunk-kubernetes-objects-1.1.0.tgz
     ```
     
 2.  Configure the variables for HELM.  
