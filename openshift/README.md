@@ -94,7 +94,7 @@ chmod +x /usr/local/bin/helm
     helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-logging -f logging-value.yml splunk-kubernetes-logging-1.1.0.tgz
     ```
 
-4. The following patch adds privileged securityContext and service account splunk-kubernetes-logging.
+4. The following patch adds privileged=true securityContext and service account splunk-kubernetes-logging.
 
     ```
       oc patch ds splunk-kubernetes-logging -p '{
@@ -145,7 +145,7 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
     
     ```
     
-3. The following patch adds privileged securityContext
+3. The following patch adds privileged=true securityContext
 
     ```
     oc patch ds splunk-kubernetes-metrics -p '{
