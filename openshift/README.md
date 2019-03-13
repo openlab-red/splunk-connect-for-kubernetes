@@ -134,7 +134,7 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
     oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-metrics --rolebinding-name=splunk-kubernetes-metrics
     ```
 
-    For fine-grained permission check metrics cluster role manifests.
+    For fine-grained permission check metrics cluster role [manifests](../manifests/splunk-kubernetes/metrics).
 
 
 2. Install HELM package
