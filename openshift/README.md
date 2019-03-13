@@ -83,7 +83,7 @@ chmod +x /usr/local/bin/helm
 2. Assign privleged permission.
 
     ```
-    oc adm policy add-scc-to-user privileged -z splunk-kubernetes-logging --rolebinding-name=splunk-kubernetes-logging
+    oc adm policy add-scc-to-user privileged -z splunk-kubernetes-logging
     ```
     
     Logging pods need access to **/var/log/**
@@ -132,6 +132,7 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
 
     ```
     oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-metrics --rolebinding-name=splunk-kubernetes-metrics
+    oc adm policy add-scc-to-user privileged -z splunk-kubernetes-metrics
     ```
 
     For fine-grained permission check metrics cluster role [manifests](https://github.com/splunk/splunk-connect-for-kubernetes/tree/master/manifests/splunk-kubernetes-metrics).
@@ -147,7 +148,7 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
 3. Update kubeletPort
 
     ```
-    oc patch deployment splunk-kubernetes-metrics -p '{
+    oc patch ds splunk-kubernetes-metrics -p '{
        "spec":{
           "template":{
              "spec":{
@@ -156,7 +157,30 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
                       "name":"splunk-fluentd-k8s-metrics",
                       "args":[
                          "--kubeletPort=10250"
-                      ]
+                      ],
+                      "securityContext":{
+                         "privileged":true
+                      }    
+                   }
+                ]
+             }
+          }
+       }
+    }'
+    
+    oc patch deployment splunk-kubernetes-metrics-agg -p '{
+       "spec":{
+          "template":{
+             "spec":{
+                "containers":[
+                   {
+                      "name":"splunk-fluentd-k8s-metrics-agg",
+                      "args":[
+                         "--kubeletPort=10250"
+                      ],
+                      "securityContext":{
+                         "privileged":true
+                      }    
                    }
                 ]
              }
