@@ -186,22 +186,35 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
 # Splunk OpenShift Web Console Extension
 
 
-1. Source code and instruction: [OpenShift Web Console Extension](https://github.com/openlab-red/ext-openshift-web-console)
+- Source code and instruction: [OpenShift Web Console Extension](https://github.com/openlab-red/ext-openshift-web-console)
 
-  * Splunk Link: https://github.com/openlab-red/ext-openshift-web-console/blob/master/app/static/scripts/splunk-link.js
-  * Splunk Style: https://github.com/openlab-red/ext-openshift-web-console/blob/master/app/static/styles/splunk-link.css
+  * [Splunk Link](https://github.com/openlab-red/ext-openshift-web-console/blob/master/app/static/scripts/splunk-link.js)
+  * [Splunk Style](https://github.com/openlab-red/ext-openshift-web-console/blob/master/app/static/styles/splunk-link.css)
 
-2. Update the webconfig-config.yaml configmap based on your settings
+- Update the webconfig-config.yaml configmap based on your settings
 
-```yml
-    extensions:
-      properties:
-        splunkURL: "https://splunk.openlab.red"
-        splunkQueryPrefix: "/app/search/search?q=search%20"
-        splunkApplicationIndex: 'ocp_logging'
-        splunkSystemIndex: 'ocp_system'
-        splunkSystemNamespacePattern: '^(openshift|kube|splunk|istio|default)\-?.*'
-```
+
+| Properties                   | Description                                          | Optional | Sample                    |
+|------------------------------|------------------------------------------------------|----------|--------------------------------------------|
+| splunkURL                    | Splunk Web Console Endpoint                          | N        |  https://splunk.openlab.red                 |
+| splunkQueryPrefix            | Search Context Path                                  | N        | /app/search/search?q=search%20              |
+| splunkApplicationIndex       | Index for application log                            | N        | ocp_logging                                 |
+| splunkSystemIndex            | Index For infrastructure log                         | Y        | ocp_system                                  |
+| splunkSystemNamespacePattern | Identify which namespace contains infrastructure log | Y        | "^(openshift|kube|splunk|istio|default)\-?.*" |
+    
+    
+    
+    ```yml
+        extensions:
+          properties:
+            splunkURL: "https://splunk.openlab.red"
+            splunkQueryPrefix: "/app/search/search?q=search%20"
+            splunkApplicationIndex: 'ocp_logging'
+            splunkSystemIndex: 'ocp_system'
+            splunkSystemNamespacePattern: '^(openshift|kube|splunk|istio|default)\-?.*'
+    ```
+    
+    
 
 
 
