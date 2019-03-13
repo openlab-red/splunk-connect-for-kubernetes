@@ -94,7 +94,7 @@ chmod +x /usr/local/bin/helm
     helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-logging -f logging-value.yml splunk-kubernetes-logging-1.1.0.tgz
     ```
 
-4. The following patch adds privileged=true securityContext and service account splunk-kubernetes-logging.
+4. The following patch adds privileged securityContext and service account splunk-kubernetes-logging.
 
     ```
       oc patch ds splunk-kubernetes-logging -p '{
@@ -128,7 +128,7 @@ Splunk Connect for Kubernetes 1.1.0 replaces Heapster as the method for collecti
 Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metrics to Splunk.
 
 
-1. Assign cluster-reader permission.
+1. Assign cluster-reader and privleged permission.
 
     ```
     oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-metrics --rolebinding-name=splunk-kubernetes-metrics
@@ -145,7 +145,7 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
     
     ```
     
-3. Update security context
+3. The following patch adds privileged securityContext
 
     ```
     oc patch ds splunk-kubernetes-metrics -p '{
