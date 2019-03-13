@@ -145,7 +145,7 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
     
     ```
     
-3. Update kubeletPort
+3. Update security context
 
     ```
     oc patch ds splunk-kubernetes-metrics -p '{
@@ -155,9 +155,6 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
                 "containers":[
                    {
                       "name":"splunk-fluentd-k8s-metrics",
-                      "args":[
-                         "--kubeletPort=10250"
-                      ],
                       "securityContext":{
                          "privileged":true
                       }    
@@ -175,9 +172,6 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
                 "containers":[
                    {
                       "name":"splunk-fluentd-k8s-metrics-agg",
-                      "args":[
-                         "--kubeletPort=10250"
-                      ],
                       "securityContext":{
                          "privileged":true
                       }    
