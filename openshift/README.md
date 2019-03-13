@@ -18,13 +18,18 @@ cp linux-amd64/helm /usr/local/bin/
 chmod +x /usr/local/bin/helm
 ```
   
-#### Configure Tiller
+## Configure Splunk Connect project
 
-1.  Create Project
+1. Create Project
+
+    First of all, create the target project, with the correct permission
+
     ```
         oc adm new-project splunk-connect --node-selector=""
-        oc adm policy add-scc-to-user privileged  -z default
     ```
+
+    The node-selector is necessary to allow the daemonset to run in all the nodes.
+    
     
 2.  Create Service Account tiller and relative role
     
@@ -33,88 +38,123 @@ chmod +x /usr/local/bin/helm
     oc adm policy add-role-to-user admin -z tiller
     ```
 
-3. Note about Helm Security:
-    * [HELM Security](https://engineering.bitnami.com/articles/helm-security.html)
-    * [Securing HELM installation](https://docs.helm.sh/using_helm/#securing-your-helm-installation)
+3. Deploy tiller
 
-## Splunk Connect for Kubernetes
-
-### Preparation
-
-1.  Download the helm packages.  
-    
-    ```
-    cd /tmp
-    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.0.1/splunk-kubernetes-logging-1.0.1.tgz
-    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.0.1/splunk-kubernetes-metrics-1.0.1.tgz
-    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.0.1/splunk-kubernetes-objects-1.0.1.tgz
-    ```
-    
-2.  Configure the variables for HELM.  
-
-    > Find here [samples](./samples) value for the splunk connect. 
-        
-
-3.  Project setup
-    
     ```
     helm init \
     --override 'spec.template.spec.containers[0].command'='{/tiller,--storage=secret,--listen=localhost:44134}' \
     --service-account=tiller \
-    --tiller-namespace=splunk-connect
+    --tiller-namespace=splunk-connect    
+    ```
+>
+> Information about securing HELM:
+>    * [HELM Security](https://engineering.bitnami.com/articles/helm-security.html)
+>    * [Securing HELM installation](https://docs.helm.sh/using_helm/#securing-your-helm-installation)
+>    * [Tillerless HELM](https://rimusz.net/tillerless-helm/)
+>
+
+## Installation
+
+1.  Download the HELM packages.  
+    
+    ```
+    cd /tmp
+    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.1.0/splunk-kubernetes-logging-1.1.0.tgz
+    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.1.0/splunk-kubernetes-metrics-1.1.0.tgz
+    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.1.0/splunk-kubernetes-objects-1.1.0.tgz
+    ```
+    
+2.  Configure the variables for HELM.  
+
+    >
+    > Find here [samples](./samples) value for the splunk connect. 
+    >    
+
+
+### Splunk Kubernetes Logging
+
+1. Create service account for logging.
+
+    ```
+    oc create sa splunk-kubernetes-logging
     ```
 
-### Installation
-    
-1.  splunk-kubernetes-logging
-    
+2. Assign privleged permission.
+
     ```
-    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-logging -f logging-value.yml splunk-kubernetes-logging-1.0.1.tgz
+    oc adm policy add-scc-to-user privileged -z splunk-kubernetes-logging --rolebinding-name=splunk-kubernetes-logging
     ```
     
-    * The following patch adds privileged=true securityContext.
-        ```
-          oc patch ds splunk-kubernetes-logging -p '{
-             "spec":{
-                "template":{
-                   "spec":{
-                      "containers":[
-                         {
-                            "name":"splunk-fluentd-k8s-logs",
-                            "securityContext":{
-                               "privileged":true
-                            }
-                         }
-                      ]
-                   }
-                }
-             }
-          }'
-        ```
-    * delete the pods to apply the latest patch
-    
-        ```
-        oc delete pods -lapp=splunk-kubernetes-logging
-        ```
-    
-2.  splunk-kubernetes-metrics
+    Logging pods need access to **/var/log/**
+
+3. Install HELM package
     
     ```
-    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-metrics -f metrics-value.yml splunk-kubernetes-metrics-1.0.1.tgz
+    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-logging -f logging-value.yml splunk-kubernetes-logging-1.1.0.tgz
+    ```
+
+4. The following patch adds privileged=true securityContext and service account splunk-kubernetes-logging.
+
+    ```
+      oc patch ds splunk-kubernetes-logging -p '{
+         "spec":{
+            "template":{
+               "spec":{
+                  "serviceAccountName": "splunk-kubernetes-logging"
+                  "containers":[
+                     {
+                        "name":"splunk-fluentd-k8s-logs",
+                        "securityContext":{
+                           "privileged":true
+                        }
+                     }
+                  ]
+               }
+            }
+         }
+      }'
+    ```
+
+5. Delete the pods to apply the latest patch
     
+    ```
+    oc delete pods -lapp=splunk-kubernetes-logging
+    ```
+
+### Splunk Kubernetes Metrics
+
+Splunk Connect for Kubernetes 1.1.0 replaces Heapster as the method for collecting metrics from Kubernetes.
+Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metrics to Splunk.
+
+
+1. Assign cluster-reader permission.
+
+    ```
     oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-metrics --rolebinding-name=splunk-kubernetes-metrics
+    ```
+
+    For fine-grained permission check metrics cluster role manifests.
+
+
+2. Install HELM package
     
+    ```
+    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-metrics -f metrics-value.yml splunk-kubernetes-metrics-1.1.0.tgz
+    
+    ```
+    
+3. Update kubeletPort
+
+    ```
     oc patch deployment splunk-kubernetes-metrics -p '{
        "spec":{
           "template":{
              "spec":{
                 "containers":[
                    {
-                      "name":"splunk-heapster",
-                      "command":[
-                         "/heapster",
-                         "--source=kubernetes:?useServiceAccount=true&kubeletHttps=true&kubeletPort=10250",
-                         "--sink=statsd:udp://127.0.0.1:9001"
+                      "name":"splunk-fluentd-k8s-metrics",
+                      "args":[
+                         "--kubeletPort=10250"
                       ]
                    }
                 ]
@@ -124,12 +164,21 @@ chmod +x /usr/local/bin/helm
     }'
     ```
     
-3.  splunk-kubernetes-objects
-    
+### Splunk Kubernetes Objects
+
+1. Assign cluster-reader permission.
+
     ```
-    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-objects -f objects-value.yml splunk-kubernetes-objects-1.0.1.tgz
-    
     oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-objects --rolebinding-name=splunk-kubernetes-objects
+    ```
+
+    For fine-grained permission check metrics cluster role manifests.
+
+
+2. Install HELM package
+
+    ```
+    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-objects -f objects-value.yml splunk-kubernetes-objects-1.1.0.tgz
     ```
     
 
