@@ -194,15 +194,13 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
 - Update the webconfig-config.yaml configmap based on your settings
 
 
-| Properties                   | Description                                          | Optional | Sample                    |
-|------------------------------|------------------------------------------------------|----------|--------------------------------------------|
-| splunkURL                    | Splunk Web Console Endpoint                          | N        |  https://splunk.openlab.red                 |
-| splunkQueryPrefix            | Search Context Path                                  | N        | /app/search/search?q=search%20              |
-| splunkApplicationIndex       | Index for application log                            | N        | ocp_logging                                 |
-| splunkSystemIndex            | Index For infrastructure log                         | Y        | ocp_system                                  |
-| splunkSystemNamespacePattern | Identify which namespace contains infrastructure log | Y        | "^(openshift|kube|splunk|istio|default)\-?.*" |
-    
-    
+| Properties                   | Description                                          | Optional | Sample                                        |
+|------------------------------|------------------------------------------------------|----------|-----------------------------------------------|
+| splunkURL                    | Splunk Web Console Endpoint                          | N        |  https://splunk.openlab.red                   |
+| splunkQueryPrefix            | Search Context Path                                  | N        | /app/search/search?q=search%20                |
+| splunkApplicationIndex       | Index for application log                            | N        | ocp_logging                                   |
+| splunkSystemIndex            | Index For infrastructure log                         | Y        | ocp_system                                    |
+| splunkSystemNamespacePattern | Identify which namespace contains infrastructure log | Y        | '^(openshift|kube|splunk|istio|default)\-?.*' |
     
     ```yml
         extensions:
