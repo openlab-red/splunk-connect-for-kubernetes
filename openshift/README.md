@@ -23,6 +23,7 @@ chmod +x /usr/local/bin/helm
 1.  Create Project
     ```
         oc adm new-project splunk-connect --node-selector=""
+        oc project splunk-connect
         oc adm policy add-scc-to-user privileged  -z default
     ```
     
@@ -45,9 +46,9 @@ chmod +x /usr/local/bin/helm
     
     ```
     cd /tmp
-    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.0.1/splunk-kubernetes-logging-1.0.1.tgz
-    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.0.1/splunk-kubernetes-metrics-1.0.1.tgz
-    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/v1.0.1/splunk-kubernetes-objects-1.0.1.tgz
+    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/1.1.0/splunk-kubernetes-logging-1.1.0.tgz
+    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/1.1.0/splunk-kubernetes-metrics-1.1.0.tgz
+    wget https://github.com/splunk/splunk-connect-for-kubernetes/releases/download/1.1.0/splunk-kubernetes-objects-1.1.0.tgz
     ```
     
 2.  Configure the variables for HELM.  
@@ -69,7 +70,7 @@ chmod +x /usr/local/bin/helm
 1.  splunk-kubernetes-logging
     
     ```
-    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-logging -f logging-value.yml splunk-kubernetes-logging-1.0.1.tgz
+    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-logging -f logging-value.yml splunk-kubernetes-logging-1.1.0.tgz
     ```
     
     * The following patch adds privileged=true securityContext.
@@ -100,7 +101,7 @@ chmod +x /usr/local/bin/helm
 2.  splunk-kubernetes-metrics
     
     ```
-    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-metrics -f metrics-value.yml splunk-kubernetes-metrics-1.0.1.tgz
+    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-metrics -f metrics-value.yml splunk-kubernetes-metrics-1.1.0.tgz
     
     oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-metrics --rolebinding-name=splunk-kubernetes-metrics
     
@@ -127,7 +128,7 @@ chmod +x /usr/local/bin/helm
 3.  splunk-kubernetes-objects
     
     ```
-    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-objects -f objects-value.yml splunk-kubernetes-objects-1.0.1.tgz
+    helm install --tiller-namespace=splunk-connect --name splunk-kubernetes-objects -f objects-value.yml splunk-kubernetes-objects-1.1.0.tgz
     
     oc adm policy add-cluster-role-to-user cluster-reader -z splunk-kubernetes-objects --rolebinding-name=splunk-kubernetes-objects
     ```
