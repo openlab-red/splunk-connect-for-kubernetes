@@ -19,7 +19,6 @@ serviceAccount:
   name:
 
 image:
-  heapsterTag: v1.5.1
   sidecarTag: 1.1.0
   pullPolicy: IfNotPresent
 

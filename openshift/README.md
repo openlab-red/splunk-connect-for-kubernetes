@@ -26,6 +26,7 @@ chmod +x /usr/local/bin/helm
 
     ```
         oc adm new-project splunk-connect --node-selector=""
+        oc project splunk-connect
     ```
 
     The node-selector is necessary to allow the daemonset to run in all the nodes.
