@@ -209,7 +209,7 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
 | splunkQueryPrefix            | Search Context Path                                  | N        | /app/search/search?q=search%20                |
 | splunkApplicationIndex       | Index for application log                            | N        | ocp_logging                                   |
 | splunkSystemIndex            | Index For infrastructure log                         | Y        | ocp_system                                    |
-| splunkSystemNamespacePattern | Identify which namespace contains infrastructure log | Y        | '^(openshift|kube|splunk|istio|default)\-?.*' |
+| splunkSystemNamespacePattern | Identify which namespace contains infrastructure log | Y        | '^(openshift\|kube\|splunk\|istio\|default)\-?.*' |
     
     
     
