@@ -185,9 +185,28 @@ Splunk built Fluentd plugins will now query, aggregate and send Kubernetes metri
 
 # Splunk OpenShift Web Console Extension
 
-## Follow
 
-[OpenShift Web Console Extension](https://github.com/openlab-red/ext-openshift-web-console)
+1. Source code and instruction: [OpenShift Web Console Extension](https://github.com/openlab-red/ext-openshift-web-console)
+
+  * Splunk Link: https://github.com/openlab-red/ext-openshift-web-console/blob/master/app/static/scripts/splunk-link.js
+  * Splunk Style: https://github.com/openlab-red/ext-openshift-web-console/blob/master/app/static/styles/splunk-link.css
+
+2. Update the webconfig-config.yaml configmap based on your settings
+
+```yml
+    extensions:
+      properties:
+        splunkURL: "https://splunk.openlab.red"
+        splunkQueryPrefix: "/app/search/search?q=search%20"
+        splunkApplicationIndex: 'ocp_logging'
+        splunkSystemIndex: 'ocp_system'
+        splunkSystemNamespacePattern: '^(openshift|kube|splunk|istio|default)\-?.*'
+```
+
+
+
+
+
 
 ## Outcome
 
